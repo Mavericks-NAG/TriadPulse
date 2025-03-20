@@ -1,0 +1,43 @@
+name: Comment Dummy Table on PR
+
+# Trigger on pull requests
+on:
+  pull_request:
+    branches:
+      - '*'
+
+# Add permissions to allow commenting
+permissions:
+  pull-requests: write  # Grants write access to PRs (includes commenting)
+
+jobs:
+  comment-dummy-table:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout code
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Comment dummy test results
+      - name: Comment dummy test results
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const dummyTable = `
+            ### Dummy Test Results
+
+            | Metric       | Count |
+            |--------------|-------|
+            | Total Tests  | 10    |
+            | Passed       | 9     |
+            | Failed       | 1     |
+            | Skipped      | 0     |
+            `;
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: dummyTable
+            });
