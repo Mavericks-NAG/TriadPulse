@@ -6,16 +6,20 @@ on:
     branches:
       - '*'
 
+# Add permissions to allow commenting
+permissions:
+  pull-requests: write  # Grants write access to PRs (includes commenting)
+
 jobs:
   comment-dummy-table:
     runs-on: ubuntu-latest
 
     steps:
-      # Checkout code (required for context, even if not used)
+      # Checkout code
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # Set up dummy table and comment on PR
+      # Comment dummy test results
       - name: Comment dummy test results
         uses: actions/github-script@v7
         with:
